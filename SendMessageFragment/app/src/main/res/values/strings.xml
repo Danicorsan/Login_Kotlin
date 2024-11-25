@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">SendMessage</string>
+    <string name="tvName">Nombre:</string>
+    <string name="tvSurname">Apellidos:</string>
+    <string name="tvdni">DNI:</string>
+    <string name="noUsuario">Usuario desconocido</string>
+    <string name="noMensaje">Mensaje desconocido</string>
+    <string name="tvPersona">%1$s : te ha mandado un mensaje</string>
+    <string name="etDNI">Escribe un DNI</string>
+    <string name="etSurname">Escrube tu apellido</string>
+    <string name="etName">Escribe tu nombre</string>
+    <string name="etMessage">Escribe un mensaje\n</string>
+    <string name="menu_aboutus">Sobre nosotros</string>
+</resources>

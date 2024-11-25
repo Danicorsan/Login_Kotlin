@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SendMessage</string>
+    <string name="tvName">Name:</string>
+    <string name="tvSurname">Surname:</string>
+    <string name="tvdni">ID:</string>
+    <string name="noUsuario">Unknown user</string>
+    <string name="noMensaje">Unknown message</string>
+    <string name="tvPersona">%1$s : has sent you a message</string>
+    <string name="etDNI">Write a ID</string>
+    <string name="etSurname">Write a surname</string>
+    <string name="etName">Write a name</string>
+    <string name="etMessage">Write a message\n</string>
+</resources>

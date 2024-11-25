@@ -1,6 +1,6 @@
 package com.moronlu18.loginjetpackcompose.login
 
-data class AccountLoginState(
+data class LoginState(
     //RNLOGIN_1 : Formato Passqword incorrecto
     // 8 caracteres mínimo (ya se contempla el nulo)
     // A-> 1 carácter mayúscula
@@ -25,4 +25,5 @@ data class AccountLoginState(
 
     //RNFLOGIN_2 : Error de conexión
     val isOffline: Boolean = false,
-)
+
+    )

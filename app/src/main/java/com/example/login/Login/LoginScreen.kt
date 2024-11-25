@@ -1,86 +1,122 @@
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text2.input.TextFieldLineLimits
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.ui.Modifier
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.tooling.preview.Preview
+package com.example.login
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.login.base.CampoForm
 import com.example.login.utils.validate
+import kotlinx.coroutines.delay
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(navController: NavHostController, modifier: Modifier = Modifier) {
 
-    var email by rememberSaveable { mutableStateOf("") } //mutable es el observador y remember es para guardar el estado
-    var password =
-        rememberSaveable { mutableStateOf("") } //By remember es mas facil no hace falta llamar al objeto.value
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
     var isErrorEmail by rememberSaveable { mutableStateOf(false) }
+    var isLoading by rememberSaveable { mutableStateOf(false) }
+    var isOffline by rememberSaveable { mutableStateOf(false) }
 
-    Box(modifier = modifier, contentAlignment = Alignment.Center) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
-        ) {
-            Text("Login Jetpack Compose", fontSize = 30.sp)
-            TextField(
-                singleLine = true,
-                value = email,
-                isError = isErrorEmail,
-                onValueChange = { email = it
-                                isErrorEmail=validate(email)
-                },
-                label = { Text("Email") },
-                supportingText = {
-                    Row {
-                        Text(if (isErrorEmail) "Formato Incorrecto: " else "")
-                        Spacer(Modifier.weight(1f))
-                        Text("${email.length}/30")
+    //para meter un delay
+    LaunchedEffect(key1 = isLoading) {
+        if (isLoading) {
+            delay(3000)
+            isOffline = true
+            isLoading = false
+        }
+    }
+
+    if (isOffline) {
+        OfflineUI()
+    } else if (!isLoading) {
+        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
+            ) {
+                Text("Login Jetpack Compose", fontSize = 30.sp)
+                CampoForm(email, isErrorEmail, "Email", {
+                    email = it
+                    isErrorEmail = !validate(email)
+                })
+                CampoForm(password, false, "Contraseña", {
+                    password = it
+                })
+                Button(onClick = { isLoading = true }) {
+                    Text("Login")
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(stringResource(R.string.no_tienes_cuenta))
+                    TextButton(onClick = {
+                        // Aquí es donde se realiza la navegación a la pantalla de registro
+                        navController.navigate("sign_up_screen") // Usa navController para navegar
+                    }) {
+                        Text("CREAR".uppercase())
                     }
                 }
-            )
-            TextField(
-                singleLine = true,
-                value = password.value,
-                onValueChange = { password.value = it },
-                label = { Text("Contraseña") }
-            )
-            Button(onClick = {}) {
-                Text("Login")
             }
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("¿No tienes cuenta?")
-                TextButton(onClick = {}) {
-                    Text("CREAR".uppercase())
-                }
-            }
+        }
+    } else {
+        LoadingUI()
+    }
+}
+
+@Composable
+fun LoadingUI(modifier: Modifier = Modifier) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = androidx.compose.ui.graphics.Color.Cyan),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .width(60.dp)
+                    .padding(10.dp),
+                color = MaterialTheme.colorScheme.secondary,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+            )
+            Spacer(modifier = modifier.size(15.dp))
+            Text("Espere un momento...", fontSize = 20.sp)
         }
     }
 }
 
-
+@Composable
+fun OfflineUI(modifier: Modifier = Modifier) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = androidx.compose.ui.graphics.Color.Cyan),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(
+                painter = painterResource(R.drawable.ic_launcher_foreground),
+                contentDescription = "Icono Android"
+            )
+            Text("No tienes conexión a la red")
+        }
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen()
+    val navController = rememberNavController()
+    LoginScreen(navController = navController)
 }

@@ -1,25 +1,31 @@
 package com.example.login
 
-import LoginScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.login.registrar.SignUpScreen
 import com.example.login.ui.theme.LoginTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         setContent {
             LoginTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LoginScreen(modifier = Modifier.padding(innerPadding))
+                val navController = rememberNavController()
+
+                NavHost(navController = navController, startDestination = "login_screen") {
+                    composable("login_screen") {
+                        LoginScreen(navController = navController) // Pasamos navController a LoginScreen
+                    }
+                    composable("sign_up_screen") {
+                        SignUpScreen() // Pantalla de registro
+                    }
                 }
             }
         }
@@ -28,6 +34,7 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
-    LoginScreen()
+fun Preview() {
+    val navController = rememberNavController()
+    LoginScreen(navController = navController)
 }
