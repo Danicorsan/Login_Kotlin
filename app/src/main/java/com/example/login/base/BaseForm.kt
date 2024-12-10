@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun CampoForm(
+fun CampoFormulario(
     value: String,
     isError: Boolean,
     texto: String,

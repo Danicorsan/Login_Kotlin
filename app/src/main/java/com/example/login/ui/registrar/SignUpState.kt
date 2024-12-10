@@ -1,4 +1,5 @@
-package com.example.login.registrar
+package com.example.jetpackcomposelogincorregido.ui.register
+
 
 data class AccountRegisterState(
     //RNREGISTER_1 : Formato Passqword incorrecto
@@ -37,7 +38,9 @@ data class AccountRegisterState(
     val success: Boolean = false,
 
 
+
     //Requerimientos NO Funcional
     //RNFLOGIN_1 : Tiempo de espera de conexión
     val isLoading: Boolean = false,
-)
+
+    )
