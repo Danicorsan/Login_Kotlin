@@ -7,3 +7,4 @@ sealed class AccountsListState {
     object Loading : AccountsListState()
     data class Success(val accounts: List<Account>) : AccountsListState()
 }
+

@@ -1,4 +1,4 @@
-package com.example.login.ui.network
+package com.example.login.data.network
 
 sealed class BaseResult<out T> {
     data class Success<out T>(val data: T) : BaseResult<T>()

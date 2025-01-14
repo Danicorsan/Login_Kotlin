@@ -1,7 +1,7 @@
 package com.example.login.data.repository
 
 import com.example.login.data.model.Dependency
-import com.example.login.ui.network.BaseResult
+import com.example.login.data.network.BaseResult
 
 object DependencyRepository {
     private var dataSet: MutableList<Dependency> = mutableListOf()

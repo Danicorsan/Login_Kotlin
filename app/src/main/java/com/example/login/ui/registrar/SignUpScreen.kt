@@ -4,26 +4,24 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.login.R
 import com.example.login.base.CampoFormulario
+import com.example.login.base.utils.ShowErrorDialog
 
 @Composable
 fun SignUpScreen(
-    modifier: Modifier = Modifier,
-    onNavigateToLogin: () -> Unit, // Navegación al login
-    navController: NavController
+    navController: NavController,
+    viewModel: RegisterViewModel = hiltViewModel()  // Obtén la instancia del ViewModel usando viewModel()
 ) {
-    var nombre by rememberSaveable { mutableStateOf("") }
-    var apellidos by rememberSaveable { mutableStateOf("") }
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -32,7 +30,6 @@ fun SignUpScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Icono de Android
         Image(
             painter = painterResource(R.drawable.ic_launcher_foreground),
             contentDescription = "Android Icon",
@@ -41,38 +38,71 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.height(16.dp))
         Text("Crea tu cuenta", style = MaterialTheme.typography.headlineSmall)
 
-        // Campos de formulario
         Spacer(modifier = Modifier.height(24.dp))
-        CampoFormulario(value = nombre, onValueChange = { nombre = it }, isError = false, texto = "Nombre")
+        CampoFormulario(
+            value = viewModel.state.userName,
+            onValueChange = { viewModel.onNameChange(it) },
+            isError = viewModel.state.nameUserErrorFormat != null,
+            texto = "Nombre",
+            errorMessage = viewModel.state.nameUserErrorFormat.orEmpty()
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        CampoFormulario(value = apellidos, onValueChange = { apellidos = it }, isError = false, texto = "Apellidos")
+        CampoFormulario(
+            value = viewModel.state.userSurname,
+            onValueChange = { viewModel.onSurnameChange(it) },
+            isError = viewModel.state.userErrorFormat != null,
+            texto = "Apellidos",
+            errorMessage = viewModel.state.userErrorFormat.orEmpty()
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        CampoFormulario(value = email, onValueChange = { email = it }, isError = false, texto = "Correo")
+        CampoFormulario(
+            value = viewModel.state.email,
+            onValueChange = { viewModel.onEmailChange(it) },
+            isError = viewModel.state.emailErrorFormat != null,
+            texto = "Correo",
+            errorMessage = viewModel.state.emailErrorFormat.orEmpty()
+        )
         Spacer(modifier = Modifier.height(8.dp))
-        CampoFormulario(value = password, onValueChange = { password = it }, isError = false, texto = "Contraseña")
+        CampoFormulario(
+            value = viewModel.state.password,
+            onValueChange = { viewModel.onPasswordChange(it) },
+            isError = viewModel.state.passwordErrorFormat != null,
+            texto = "Contraseña",
+            errorMessage = viewModel.state.passwordErrorFormat.orEmpty()
+        )
 
-        // Botón de registro
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
-                // Lógica para registrar (puedes agregar lógica de validación aquí)
+                viewModel.register(
+                    onSuccess = { navController.navigate("account_screen") },
+                    onError = { error ->
+                        errorMessage = error
+                        showErrorDialog = true
+                    }
+                )
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !viewModel.state.isLoading
         ) {
-            Text("Registrarse")
+            Text(if (viewModel.state.isLoading) "Registrando..." else "Registrarse")
         }
 
-        // Botón para ir al Login
         Spacer(modifier = Modifier.height(16.dp))
-        Divider() // Línea separadora
+        Divider()
         Spacer(modifier = Modifier.height(16.dp))
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text("¿Ya tienes cuenta?")
-            TextButton(onClick = onNavigateToLogin) {
-                Text("Inicia sesión")
-            }
+        Text("¿Ya tienes cuenta?")
+        TextButton(onClick = { navController.navigate("login_screen") }) {
+            Text("Inicia sesión")
+        }
+    }
+
+    if (showErrorDialog) {
+        ShowErrorDialog(errorMessage) {
+            showErrorDialog = false // Ocultar el cuadro de diálogo cuando se haga clic en "OK"
         }
     }
 }
+
+
+

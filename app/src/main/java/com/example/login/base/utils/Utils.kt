@@ -1,4 +1,4 @@
-package com.example.login.utils
+package com.example.login.base.utils
 
 fun validate(email: String): Boolean {
 

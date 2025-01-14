@@ -6,6 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
 fun CampoFormulario(
@@ -13,7 +15,8 @@ fun CampoFormulario(
     isError: Boolean,
     texto: String,
     onValueChange: (String) -> Unit,
-    errorMessage: String = "Formato Incorrecto"
+    errorMessage: String = "Formato Incorrecto",
+    isPassword: Boolean = false
 ) {
     TextField(
         singleLine = true,
@@ -27,5 +30,6 @@ fun CampoFormulario(
                 Spacer(Modifier.weight(1f))
             }
         },
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
     )
 }
