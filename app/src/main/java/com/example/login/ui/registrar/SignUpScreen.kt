@@ -1,9 +1,25 @@
 package com.example.login.ui.registrar
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -17,7 +33,8 @@ import com.example.login.base.utils.ShowErrorDialog
 @Composable
 fun SignUpScreen(
     navController: NavController,
-    viewModel: RegisterViewModel = hiltViewModel()  // Obtén la instancia del ViewModel usando viewModel()
+    viewModel: RegisterViewModel = hiltViewModel(),  // Obtén la instancia del ViewModel usando viewModel()
+    onRegister: (String, String) -> Unit // Recibimos email y password desde aquí
 ) {
 
     var showErrorDialog by remember { mutableStateOf(false) }
@@ -75,7 +92,7 @@ fun SignUpScreen(
         Button(
             onClick = {
                 viewModel.register(
-                    onSuccess = { navController.navigate("account_screen") },
+                    onSuccess = { onRegister(viewModel.state.email, viewModel.state.password) },
                     onError = { error ->
                         errorMessage = error
                         showErrorDialog = true
@@ -89,7 +106,7 @@ fun SignUpScreen(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Divider()
+        HorizontalDivider()
         Spacer(modifier = Modifier.height(16.dp))
         Text("¿Ya tienes cuenta?")
         TextButton(onClick = { navController.navigate("login_screen") }) {

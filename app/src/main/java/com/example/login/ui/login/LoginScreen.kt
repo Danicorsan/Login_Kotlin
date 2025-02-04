@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,13 +35,22 @@ import com.example.login.base.CampoFormulario
 
 @Composable
 fun LoginScreen(
+    email:String,
+    password:String,
     onclickCrearCuenta: () -> Unit,
     onSucces: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel<LoginViewModel>()
 ) {
     val state = viewModel.state
     val context = LocalContext.current
 
+    // Usamos LaunchedEffect para actualizar el estado en el ViewModel
+    // tan pronto como recibimos los parámetros `email` y `password`.
+    LaunchedEffect(email, password) {
+        if (email.isNotEmpty() && password.isNotEmpty()) {
+            viewModel.setCredentialsFromSignUp(email, password)
+        }
+    }
 
     if (state.success) {
             onSucces()
@@ -118,9 +128,6 @@ fun LoginScreen(
             }
         }
     }
-
-
-
 }
 
 fun showErrorDialog(context: Context, error: String) {

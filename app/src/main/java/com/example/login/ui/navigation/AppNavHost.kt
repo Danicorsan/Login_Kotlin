@@ -7,17 +7,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.example.login.ui.login.LoginViewModel
 import com.example.login.ui.registrar.RegisterViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun AppNavHost(
     navController: NavHostController,
-    startDestination: String
 ) {
+    val viewModel: MainViewModel = hiltViewModel()
     NavHost(
         navController = navController,
-        startDestination = startDestination
+        startDestination = viewModel.state.startNavDestination()
     ) {
-        loginGraph(navController = navController)
+        accountGraph(navController = navController)
+        signInUpGraph(navController)
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.login.ui.registrar
 
+import android.content.res.Resources
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,9 +13,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+
+//Inyectar resources
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val repository: AccountRepository
+    private val repository: AccountRepository,
+    private val resources:Resources
 ) : ViewModel() {
 
     var state by mutableStateOf(AccountRegisterState())
@@ -27,7 +31,8 @@ class RegisterViewModel @Inject constructor(
         if (!name.matches(Regex(nameRegex))) {
             state = state.copy(
                 isNameError = true,
-                nameUserErrorFormat = "Nombre inválido (mínimo 2 caracteres, solo letras y espacios)"
+                // Hay que poner esto con strings
+                // nameUserErrorFormat = resources.getString()
             )
         }
         state = state.copy(userName = name)

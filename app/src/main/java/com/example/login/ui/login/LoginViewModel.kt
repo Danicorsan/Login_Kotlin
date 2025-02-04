@@ -55,4 +55,12 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
+    //Establece los dos parametros que vienen en de SignUp
+    fun setCredentialsFromSignUp(email:String,password: String) {
+        state = state.copy(
+            email = email,
+            password= password
+        )
+    }
 }
