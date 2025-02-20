@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.example.login.ui.account.AccountScreen
+import com.example.login.ui.account.AccountsListScreen
 import com.example.login.ui.account.AccountsListsViewModel
 
 object AccountGraph {
@@ -26,8 +26,11 @@ private fun NavGraphBuilder.account(
 ){
     composable(AccountGraph.accountList()) {
         val accountViewModel: AccountsListsViewModel = hiltViewModel()
-        AccountScreen(
-            viewModel = accountViewModel
+        AccountsListScreen(
+            viewModel = accountViewModel,
+            goToDetail = {},
+            goToCreation = {} ,
+            openDrawer = {}
         )
     }
 }

@@ -16,18 +16,18 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun Loading(modifier: Modifier = Modifier) =loadingIU(modifier)
+fun Loading(modifier: Modifier = Modifier) = LoadingUI(modifier)
 
 
 @Composable
-fun loadingIU(modifier: Modifier = Modifier) {
+fun LoadingUI(modifier: Modifier = Modifier) {
     LoadingScreen(modifier);
 }
 
 @Composable
 fun LoadingScreen(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {

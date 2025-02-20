@@ -1,22 +1,20 @@
 package com.example.login.ui.navigation
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import android.content.res.Resources
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
-import com.example.login.ui.account.AccountScreen
-import com.example.login.ui.account.AccountsListsViewModel
+import com.example.login.data.repository.AccountRepositoryDB
 import com.example.login.ui.login.LoginScreen
 import com.example.login.ui.login.LoginViewModel
 import com.example.login.ui.navigation.SignInUpGraph.EMAIL
 import com.example.login.ui.navigation.SignInUpGraph.PASSWORD
+import com.example.login.ui.navigation.SignInUpGraph.ROUTE
 import com.example.login.ui.registrar.RegisterViewModel
 import com.example.login.ui.registrar.SignUpScreen
 
@@ -26,14 +24,15 @@ object SignInUpGraph {
     const val PASSWORD = "password"
 
     // Aquí definimos la ruta correctamente con los parámetros
-    fun login() = "${ROUTE}/login?${EMAIL}={email}&${PASSWORD}={password}"
+    //fun login(email:String = "", password:String = "") = "${ROUTE}/login?${EMAIL}=$email&${PASSWORD}=$password"
+    fun login() = "${ROUTE}/login?${EMAIL}={email}&${PASSWORD}={password}"//Ruta dinamica
     fun register() = "register_screen"
 }
 
 fun NavGraphBuilder.signInUpGraph(
     navController: NavController
 ) {
-    navigation(startDestination = SignInUpGraph.login(), route = SignInUpGraph.ROUTE) {
+    navigation(startDestination = SignInUpGraph.login(), route = ROUTE) {
         login(navController)
         signUp(navController)
     }
@@ -57,32 +56,29 @@ private fun NavGraphBuilder.login(navController: NavController){
             val email = backStackEntry.arguments?.getString(EMAIL) ?: ""
             val password = backStackEntry.arguments?.getString(PASSWORD) ?: ""
 
-            val loginViewModel: LoginViewModel = hiltViewModel()
-            LoginScreen(
-                email = email,
-                password = password,
-                onclickCrearCuenta = { navController.navigate(SignInUpGraph.register()) },
-                onSucces = { navController.navigate(AccountGraph.accountList()) },
-                viewModel = loginViewModel
-            )
+        LoginScreen(
+            email = email,
+            password = password,
+            onClickCrearCuenta = { navController.navigate(SignInUpGraph.register()) },
+            viewModel = hiltViewModel(),
+            onSuccess = {
+                navController.navigate(AccountGraph.ROUTE) {
+                    popUpTo(ROUTE) { inclusive = true } // Borra la pila de login
+                }
+            },
+        )
         }
 }
-
-private fun NavGraphBuilder.signUp(navController: NavController){
+private fun NavGraphBuilder.signUp(navController: NavController) {
     composable(SignInUpGraph.register()) {
-        val registerViewModel: RegisterViewModel = hiltViewModel()
         SignUpScreen(
-            navController = navController,
-            viewModel = registerViewModel,
-            onRegister = { email, password ->
-                // Aquí accedes a los parámetros email y password
-                // Luego navegas a la pantalla de login, pasando esos parámetros en la URL
+            viewModel = hiltViewModel(),
+            onRegisterSuccess = { email, password ->
                 navController.navigate(
-                    SignInUpGraph.login()
-                        .replace("{email}", email)
-                        .replace("{password}", password)
+                    "$ROUTE/login?$EMAIL=$email&$PASSWORD=$password"
                 )
-            }
+            },
+            onNavigateToLogin = { navController.navigate(ROUTE)}
         )
     }
 }

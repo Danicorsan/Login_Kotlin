@@ -1,18 +1,21 @@
 package com.example.login.ui.login
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.login.data.repository.AccountRepository
+import com.example.login.data.model.Account
+import com.example.login.data.network.BaseResult
+import com.example.login.data.repository.AccountRepositoryDB
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: AccountRepository
+    private val repository: AccountRepositoryDB,
 ) : ViewModel() {
 
     var state by mutableStateOf(LoginState())
@@ -33,10 +36,11 @@ class LoginViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            Log.e("EEEEE", "Aqui llego y esto $repository")
             state = state.copy(isLoading = true)
             try {
-                val result = repository.login(state.email, state.password)
-                if (result.isSuccess) {
+                val result:BaseResult<Account> = repository.validate(state.email, state.password)
+                if (result is BaseResult.Success<Account>) {
                     state = state.copy(success = true, isLoading = false)
                     onSuccess()
                 } else {

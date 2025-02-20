@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcomposelogincorregido.ui.register.AccountRegisterState
 import com.example.login.data.model.AccountException
-import com.example.login.data.repository.AccountRepository
+import com.example.login.data.repository.AccountRepositoryDB
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,8 +17,8 @@ import javax.inject.Inject
 //Inyectar resources
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val repository: AccountRepository,
-    private val resources:Resources
+    private val repository: AccountRepositoryDB,
+    //private val resources:Resources
 ) : ViewModel() {
 
     var state by mutableStateOf(AccountRegisterState())

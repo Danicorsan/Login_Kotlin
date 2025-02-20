@@ -6,6 +6,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
+/*
 object AccountRepository {
 
     // Simulación de un dataset en memoria
@@ -18,6 +19,7 @@ object AccountRepository {
     private fun initialize() {
         dataSet.add(
             Account(
+                id = 1,
                 email = "daniel@gmail.com",
                 password = "HolaHola19?",
                 name = "Daniel",
@@ -28,12 +30,25 @@ object AccountRepository {
         )
         dataSet.add(
             Account(
+                id = 2,
                 email = "lucia@gmail.com",
                 password = "Password123!",
                 name = "Lucía",
                 surname = "García",
                 username = "lucygar",
-                birthdate = "15/07/1995"
+                birthdate = "15/07/1995",
+
+            )
+        )
+        dataSet.add(
+            Account(
+                id = 1,
+                email = "Ahora@gmail.com",
+                password = "HolaHola19?",
+                name = "Ahora",
+                surname = "Ahora",
+                username = "Ahora",
+                birthdate = "02/03/2003"
             )
         )
     }
@@ -74,6 +89,7 @@ object AccountRepository {
 
         // Agrega la nueva cuenta al dataset
         val newAccount = Account(
+            id = dataSet.size + 1,
             email = email,
             password = password,
             name = name,
@@ -84,5 +100,10 @@ object AccountRepository {
         dataSet.add(newAccount)
         return Result.success(Unit)
     }
+
+    fun deleteAccount(account: Account) {
+        dataSet.remove(account)
+    }
 }
 
+ */
